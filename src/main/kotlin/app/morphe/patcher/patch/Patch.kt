@@ -303,6 +303,9 @@ class BytecodePatch internal constructor(
     fun getExtensionInputStream(): Supplier<InputStream>? =
         extensionStreamProviders.firstOrNull()?.let { provider -> Supplier { provider.get().first().get() } }
 
+    // Preserve the explicit JVM method present in the published API.
+    override fun toString(): String = super.toString()
+
     override fun execute(context: PatcherContext) = with(context.bytecodeContext) {
         mergeExtension(this@BytecodePatch)
         execute(this)
@@ -373,6 +376,9 @@ class RawResourcePatch internal constructor(
         finalizeBlock = finalizeBlock
     )
 
+    // Preserve the explicit JVM method present in the published API.
+    override fun toString(): String = super.toString()
+
     override fun execute(context: PatcherContext) = execute(context.resourceContext)
 
     override fun finalize(context: PatcherContext) = finalize(context.resourceContext)
@@ -439,6 +445,9 @@ class ResourcePatch internal constructor(
         executeBlock = executeBlock,
         finalizeBlock = finalizeBlock
     )
+
+    // Preserve the explicit JVM method present in the published API.
+    override fun toString(): String = super.toString()
 
     override fun execute(context: PatcherContext) = execute(context.resourceContext)
 

@@ -34,9 +34,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./gradlew test jar --no-daemon --stacktrace
-      - name: Diagnostic de compatibilité ABI de l'amont
+      - name: Vérifier strictement la compatibilité ABI
         id: abi
-        continue-on-error: true
         run: ./gradlew apiCheck --no-daemon
       - name: Résumé de validation
         if: always()
