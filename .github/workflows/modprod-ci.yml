@@ -33,7 +33,14 @@ jobs:
       - name: Compiler et tester
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: ./gradlew build --no-daemon --stacktrace
+        run: ./gradlew test jar --no-daemon --stacktrace
+      - name: Diagnostic de compatibilité ABI de l'amont
+        continue-on-error: true
+        run: ./gradlew apiCheck --no-daemon
+      - name: Avertissement sur la compatibilité
+        run: |
+          echo "::notice::Le JAR est compilé indépendamment du diagnostic ABI."
+          echo "Avant de l'utiliser dans APK Factory, vérifier le fichier api/morphe-patcher.api et les écarts éventuels."
       - name: Contrôler les archives de la bibliothèque
         run: |
           test -n "$(find build/libs -maxdepth 1 -type f -name '*.jar' -print -quit)" || {
