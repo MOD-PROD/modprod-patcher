@@ -1,15 +1,14 @@
 name: Release
 
+# Fork ModProd : les publications automatiques de l'amont sont bloquées.
+# Réactiver après un audit du pipeline, des coordonnées Maven et des clés.
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-      - dev
 
 jobs:
   release:
-    name: Release
+    name: Publication amont désactivée dans le fork
+    if: github.repository == 'MorpheApp/morphe-patcher'
     permissions:
       contents: write
       packages: write

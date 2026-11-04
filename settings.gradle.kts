@@ -1,4 +1,4 @@
-rootProject.name = "morphe-patcher"
+rootProject.name = "modprod-patcher"
 
 // Include Morphe forks of libraries as composite builds if they exist locally
 mapOf(
