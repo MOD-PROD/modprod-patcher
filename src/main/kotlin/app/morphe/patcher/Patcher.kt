@@ -97,9 +97,11 @@ class Patcher(private val config: PatcherConfig) : Closeable {
      * @return A flow of [PatchResult]s.
      */
     /** Binary-compatible no-argument entry point for existing patch managers. */
-    operator fun invoke() = invoke({})
+    operator fun invoke() = executePatches({})
 
-    operator fun invoke(onPatchExecuting: (Patch<*>) -> Unit) = flow {
+    operator fun invoke(onPatchExecuting: (Patch<*>) -> Unit) = executePatches(onPatchExecuting)
+
+    private fun executePatches(onPatchExecuting: (Patch<*>) -> Unit) = flow {
         fun Patch<*>.execute(
             executedPatches: LinkedHashMap<Patch<*>, PatchResult>,
         ): PatchResult {
