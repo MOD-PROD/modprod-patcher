@@ -96,12 +96,12 @@ class Patcher(private val config: PatcherConfig) : Closeable {
      *                         it is done, which leaves a caller blind to one that never is.
      * @return A flow of [PatchResult]s.
      */
-    /** Binary-compatible no-argument entry point for existing patch managers. */
-    operator fun invoke() = executePatches({})
-
-    operator fun invoke(onPatchExecuting: (Patch<*>) -> Unit) = executePatches(onPatchExecuting)
-
-    private fun executePatches(onPatchExecuting: (Patch<*>) -> Unit) = flow {
+    /**
+     * Keep the original Kotlin entry point and generate an additional no-arg JVM overload,
+     * preserving the historical descriptor for precompiled clients.
+     */
+    @JvmOverloads
+    operator fun invoke(onPatchExecuting: (Patch<*>) -> Unit = {}) = flow {
         fun Patch<*>.execute(
             executedPatches: LinkedHashMap<Patch<*>, PatchResult>,
         ): PatchResult {
