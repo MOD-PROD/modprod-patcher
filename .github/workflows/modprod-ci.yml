@@ -9,6 +9,7 @@ on:
       - 'gradle/**'
       - 'gradlew'
       - 'gradle.properties'
+      - 'api/**'
       - '.github/workflows/modprod-ci.yml'
   workflow_dispatch:
 
