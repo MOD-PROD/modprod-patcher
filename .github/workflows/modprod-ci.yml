@@ -35,12 +35,22 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./gradlew test jar --no-daemon --stacktrace
       - name: Diagnostic de compatibilité ABI de l'amont
+        id: abi
         continue-on-error: true
         run: ./gradlew apiCheck --no-daemon
-      - name: Avertissement sur la compatibilité
+      - name: Résumé de validation
+        if: always()
+        env:
+          ABI_OUTCOME: ${{ steps.abi.outcome }}
         run: |
-          echo "::notice::Le JAR est compilé indépendamment du diagnostic ABI."
-          echo "Avant de l'utiliser dans APK Factory, vérifier le fichier api/morphe-patcher.api et les écarts éventuels."
+          echo "## ModProd Patcher — diagnostic" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Compilation et tests : consulter les étapes précédentes." >> "$GITHUB_STEP_SUMMARY"
+          if [ "$ABI_OUTCOME" != "success" ]; then
+            echo "::warning::ABI héritée non validée : ne pas activer ce moteur dans APK Factory."
+            echo "- Compatibilité ABI : **NON VALIDÉE**." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "- Compatibilité ABI : **validée**." >> "$GITHUB_STEP_SUMMARY"
+          fi
       - name: Contrôler les archives de la bibliothèque
         run: |
           test -n "$(find build/libs -maxdepth 1 -type f -name '*.jar' -print -quit)" || {
