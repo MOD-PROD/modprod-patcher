@@ -1,4 +1,6 @@
-rootProject.name = "modprod-patcher"
+// Identifiant Gradle interne historique conservé pour la compatibilité ABI (api/morphe-patcher.api).
+// Nom et branding publics : ModProd Patcher.
+rootProject.name = "morphe-patcher"
 
 // Include Morphe forks of libraries as composite builds if they exist locally
 mapOf(
