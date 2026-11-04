@@ -34,3 +34,19 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./gradlew build --no-daemon --stacktrace
+      - name: Contrôler les archives de la bibliothèque
+        run: |
+          test -n "$(find build/libs -maxdepth 1 -type f -name '*.jar' -print -quit)" || {
+            echo "::error::Aucun JAR compilé par ModProd Patcher"
+            exit 1
+          }
+          (cd build/libs && sha256sum -- *.jar) | tee modprod-patcher-sha256.txt
+      - name: Enregistrer les bibliothèques compilées
+        uses: actions/upload-artifact@v4
+        with:
+          name: modprod-patcher-build
+          path: |
+            build/libs/*.jar
+            modprod-patcher-sha256.txt
+          retention-days: 14
+          if-no-files-found: error
